@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Utkarsh Mathur — Naval Officer & AGI Enthusiast</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700&family=DM+Mono:wght@300;400&family=Lora:ital,wght@0,400;1,300;1,400&display=swap" rel="stylesheet">
+
+<!-- SVG filter for real glass refraction -->
+<svg style="position:absolute;width:0;height:0;overflow:hidden" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="glass-distort" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.015 0.012" numOctaves="3" seed="5" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
+      <feGaussianBlur in="displaced" stdDeviation="0.4" result="blurred"/>
+      <feComposite in="blurred" in2="SourceGraphic" operator="in"/>
+    </filter>
+
+    <filter id="glass-distort-strong" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.018 0.014" numOctaves="3" seed="8" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
+      <feGaussianBlur in="displaced" stdDeviation="0.6" result="blurred"/>
+      <feComposite in="blurred" in2="SourceGraphic" operator="in"/>
+    </filter>
+  </defs>
+</svg>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #F5F5F0;
+  --white: #FFFFFF;
+  --text: #0A0A0A;
+  --muted: #6B6B6B;
+  --border: #E0E0D8;
+  --font-display: 'Bricolage Grotesque', sans-serif;
+  --font-serif: 'Lora', Georgia, serif;
+  --font-mono: 'DM Mono', monospace;
+
+  /* Liquid Glass variables */
+  --glass-bg: rgba(255,255,255,0.22);
+  --glass-border: rgba(255,255,255,0.6);
+  --glass-shadow-inset-top: rgba(255,255,255,0.85);
+  --glass-shadow-inset-bottom: rgba(255,255,255,0.1);
+  --glass-specular: rgba(255,255,255,0.9);
+  --glass-blur: blur(32px) saturate(180%) brightness(1.04);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-display);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  padding: 80px 24px 0;
+}
+
+@media(max-width:900px){
+  body { padding: 80px 12px 0; }
+}
+
+/* ══════════════════════════════════
+   LIQUID GLASS MIXIN — applied everywhere
+══════════════════════════════════ */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    /* Top specular highlight — catches light */
+    0 1px 0 var(--glass-shadow-inset-top) inset,
+    /* Bottom subtle reflection */
+    0 -1px 0 var(--glass-shadow-inset-bottom) inset,
+    /* Left rim */
+    1px 0 0 rgba(255,255,255,0.35) inset,
+    /* Right rim */
+    -1px 0 0 rgba(255,255,255,0.35) inset,
+    /* Outer shadow — depth */
+    0 8px 32px rgba(0,0,0,0.08),
+    0 2px 8px rgba(0,0,0,0.05),
+    0 0 0 0.5px rgba(0,0,0,0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Specular shine layer on top of glass */
+.glass::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 50%;
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.28) 0%,
+    rgba(255,255,255,0.06) 60%,
+    transparent 100%
+  );
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Moving light sweep — reacts to hover */
+.glass::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -80%;
+  width: 55%; height: 200%;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgba(255,255,255,0.45) 48%,
+    rgba(255,255,255,0.15) 52%,
+    transparent 65%
+  );
+  transform: skewX(-15deg);
+  pointer-events: none;
+  z-index: 2;
+  transition: left 0.65s cubic-bezier(0.22,1,0.36,1), opacity 0.3s;
+  opacity: 0;
+}
+.glass:hover::after {
+  left: 120%;
+  opacity: 1;
+}
+
+/* ══════════════════════════════════
+   AURORA RGB BACKGROUND
+══════════════════════════════════ */
+.aurora-wrap {
+  position: absolute;
+  inset: -80%;
+  width: 260%; height: 260%;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(55px);
+}
+
+.blob { position: absolute; border-radius: 50%; mix-blend-mode: multiply; }
+
+/* 4 corner blobs + center */
+.ha .b1 { width:62%;height:62%;top:-2%;left:-2%;   background:radial-gradient(circle,rgba(120,180,240,0.68) 0%,rgba(80,140,220,0.28) 50%,transparent 72%); animation:b1 13s ease-in-out infinite alternate; }
+.ha .b2 { width:58%;height:58%;top:-2%;right:-2%;left:auto; background:radial-gradient(circle,rgba(220,160,200,0.58) 0%,rgba(200,130,180,0.24) 50%,transparent 72%); animation:b2 15s ease-in-out infinite alternate; }
+.ha .b3 { width:58%;height:58%;bottom:-2%;right:-2%;top:auto;left:auto; background:radial-gradient(circle,rgba(130,200,210,0.58) 0%,rgba(90,170,190,0.24) 50%,transparent 72%); animation:b3 11s ease-in-out infinite alternate; }
+.ha .b4 { width:58%;height:58%;bottom:-2%;left:-2%;top:auto; background:radial-gradient(circle,rgba(170,150,220,0.55) 0%,rgba(140,120,200,0.22) 50%,transparent 72%); animation:b4 17s ease-in-out infinite alternate; }
+.ha .b5 { width:45%;height:45%;top:28%;left:28%; background:radial-gradient(circle,rgba(240,200,160,0.5) 0%,rgba(220,175,130,0.2) 50%,transparent 72%); animation:b5 9s ease-in-out infinite alternate; }
+
+@keyframes b1 { 0%{transform:translate(0,0) scale(1)} 100%{transform:translate(6%,8%) scale(1.12)} }
+@keyframes b2 { 0%{transform:translate(0,0) scale(1.08)} 100%{transform:translate(-8%,6%) scale(0.9)} }
+@keyframes b3 { 0%{transform:translate(0,0) scale(0.94)} 100%{transform:translate(-6%,8%) scale(1.15)} }
+@keyframes b4 { 0%{transform:translate(0,0) scale(1)} 100%{transform:translate(9%,-6%) scale(1.1)} }
+@keyframes b5 { 0%{transform:translate(0,0) scale(1)} 100%{transform:translate(-4%,7%) scale(0.88)} }
+
+/* ══════════════════════════════════
+   NAV — Floating Liquid Glass Pill
+══════════════════════════════════ */
+.nav-wrap {
+  position: fixed;
+  top: 14px; left: 0; right: 0;
+  z-index: 200;
+  display: flex;
+  justify-content: center;
+  padding: 0 24px;
+  pointer-events: none;
+}
+
+nav {
+  pointer-events: all;
+  width: 100%;
+  max-width: 880px;
+  height: 54px;
+  padding: 0 10px 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 999px;
+
+  /* Liquid Glass */
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(40px) saturate(200%) brightness(1.06);
+  -webkit-backdrop-filter: blur(40px) saturate(200%) brightness(1.06);
+  border: 1px solid rgba(255,255,255,0.65);
+  box-shadow:
+    0 1.5px 0 rgba(255,255,255,0.9) inset,
+    0 -1px 0 rgba(255,255,255,0.15) inset,
+    1px 0 0 rgba(255,255,255,0.4) inset,
+    -1px 0 0 rgba(255,255,255,0.4) inset,
+    0 8px 32px rgba(0,0,0,0.1),
+    0 2px 8px rgba(0,0,0,0.06),
+    0 0 0 0.5px rgba(0,0,0,0.05);
+
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.3s, background 0.3s;
+}
+
+/* Nav specular top highlight */
+nav::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 45%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.32) 0%, transparent 100%);
+  border-radius: 999px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Nav light sweep on hover */
+nav::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -60%;
+  width: 40%; height: 200%;
+  background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.5) 48%, rgba(255,255,255,0.2) 52%, transparent 70%);
+  transform: skewX(-10deg);
+  z-index: 2;
+  pointer-events: none;
+  transition: left 0.7s cubic-bezier(0.22,1,0.36,1);
+  opacity: 0;
+}
+nav:hover::after { left: 120%; opacity: 1; }
+
+nav:hover {
+  background: rgba(255,255,255,0.28);
+  box-shadow:
+    0 1.5px 0 rgba(255,255,255,0.95) inset,
+    0 -1px 0 rgba(255,255,255,0.2) inset,
+    1px 0 0 rgba(255,255,255,0.5) inset,
+    -1px 0 0 rgba(255,255,255,0.5) inset,
+    0 12px 40px rgba(0,0,0,0.12),
+    0 4px 12px rgba(0,0,0,0.08);
+}
+
+.nav-logo {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: -0.02em;
+  position: relative; z-index: 3;
+}
+
+.nav-links {
+  display: flex;
+  gap: 4px;
+  list-style: none;
+  align-items: center;
+  position: relative; z-index: 3;
+}
+
+.nav-links a {
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(10,10,10,0.7);
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 999px;
+  transition: all 0.2s;
+}
+.nav-links a:hover {
+  color: var(--text);
+  background: rgba(255,255,255,0.4);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.8) inset;
+}
+
+/* Nav CTA — glass pill dark */
+.nav-cta {
+  background: rgba(10,10,10,0.82) !important;
+  color: rgba(255,255,255,0.92) !important;
+  padding: 7px 18px !important;
+  border-radius: 999px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  border: 1px solid rgba(255,255,255,0.15) !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.2) inset, 0 3px 10px rgba(0,0,0,0.2) !important;
+  backdrop-filter: blur(20px) !important;
+  transition: all 0.25s cubic-bezier(0.34,1.4,0.64,1) !important;
+}
+.nav-cta:hover {
+  background: rgba(0,0,0,0.92) !important;
+  transform: translateY(-1px) scale(1.03) !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.25) inset, 0 6px 16px rgba(0,0,0,0.25) !important;
+}
+
+/* ══════════════════════════════════
+   HERO
+══════════════════════════════════ */
+.hero {
+  min-height: 100vh;
+  padding: 140px 48px 100px;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 24px;
+  
+  /* Glass card like widgets */
+  background: rgba(255,255,255,0.22);
+  backdrop-filter: blur(28px) saturate(160%) brightness(1.03);
+  -webkit-backdrop-filter: blur(28px) saturate(160%) brightness(1.03);
+  border: 1px solid rgba(255,255,255,0.65);
+  box-shadow:
+    0 1.5px 0 rgba(255,255,255,0.9) inset,
+    0 -1px 0 rgba(255,255,255,0.12) inset,
+    1px 0 0 rgba(255,255,255,0.4) inset,
+    -1px 0 0 rgba(255,255,255,0.4) inset,
+    0 8px 40px rgba(0,0,0,0.06),
+    0 2px 8px rgba(0,0,0,0.04);
+}
+
+/* Specular top highlight on hero */
+.hero::before {
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;height:40%;
+  background:linear-gradient(180deg,rgba(255,255,255,0.28) 0%,rgba(255,255,255,0.05) 60%,transparent 100%);
+  border-radius:24px;
+  pointer-events:none;
+  z-index:1;
+}
+
+.hero > *:not(.aurora-wrap) { position: relative; z-index: 2; }
+
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: rgba(10,10,10,0.55);
+  padding: 7px 18px;
+  border-radius: 999px;
+  margin-bottom: 36px;
+  width: fit-content;
+  opacity: 0;
+  animation: fadeUp 0.7s ease 0.1s both;
+
+  /* Ultra translucent glass pill */
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(255,255,255,0.35);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.5) inset,
+    0 1px 6px rgba(0,0,0,0.03);
+}
+
+.hero-tag .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #1B7A4A;
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
+
+.hero-title {
+  font-size: clamp(54px, 7.5vw, 100px);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  color: var(--text);
+  margin-bottom: 28px;
+  max-width: 840px;
+  opacity: 0;
+  animation: fadeUp 0.7s ease 0.2s both;
+}
+.hero-title .serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  color: #1B4F7A;
+}
+
+.hero-sub {
+  font-size: 18px;
+  color: var(--muted);
+  line-height: 1.75;
+  max-width: 480px;
+  font-weight: 300;
+  margin-bottom: 52px;
+  opacity: 0;
+  animation: fadeUp 0.7s ease 0.3s both;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 0.7s ease 0.4s both;
+}
+
+/* Glass buttons */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+  color: rgba(255,255,255,0.94);
+  background: rgba(10,10,10,0.86);
+  border: 1px solid rgba(255,255,255,0.14);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.22) inset,
+    0 -1px 0 rgba(0,0,0,0.3) inset,
+    0 6px 20px rgba(0,0,0,0.18);
+  backdrop-filter: blur(20px);
+  transition: all 0.35s cubic-bezier(0.34,1.4,0.64,1);
+  position: relative; overflow: hidden;
+}
+.btn-primary::after {
+  content:'';
+  position:absolute;top:-50%;left:-80%;
+  width:45%;height:200%;
+  background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.4) 48%,transparent 65%);
+  transform:skewX(-10deg);
+  transition:left 0.6s cubic-bezier(0.22,1,0.36,1);
+  opacity:0;
+}
+.btn-primary:hover::after { left:130%; opacity:1; }
+.btn-primary:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.3) inset, 0 10px 30px rgba(0,0,0,0.22);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 400;
+  text-decoration: none;
+  color: var(--text);
+
+  /* Full liquid glass */
+  background: rgba(255,255,255,0.28);
+  backdrop-filter: blur(32px) saturate(180%) brightness(1.05);
+  -webkit-backdrop-filter: blur(32px) saturate(180%) brightness(1.05);
+  border: 1px solid rgba(255,255,255,0.72);
+  box-shadow:
+    0 1.5px 0 rgba(255,255,255,0.95) inset,
+    0 -1px 0 rgba(255,255,255,0.15) inset,
+    1px 0 0 rgba(255,255,255,0.45) inset,
+    -1px 0 0 rgba(255,255,255,0.45) inset,
+    0 4px 16px rgba(0,0,0,0.07);
+  transition: all 0.35s cubic-bezier(0.34,1.4,0.64,1);
+  position: relative; overflow: hidden;
+}
+.btn-secondary::after {
+  content:'';
+  position:absolute;top:-50%;left:-80%;
+  width:45%;height:200%;
+  background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.6) 48%,transparent 65%);
+  transform:skewX(-10deg);
+  transition:left 0.6s cubic-bezier(0.22,1,0.36,1);
+  opacity:0;
+}
+.btn-secondary:hover::after { left:130%; opacity:1; }
+.btn-secondary:hover {
+  background: rgba(255,255,255,0.45);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow:
+    0 1.5px 0 rgba(255,255,255,1) inset,
+    0 -1px 0 rgba(255,255,255,0.2) inset,
+    1px 0 0 rgba(255,255,255,0.6) inset,
+    -1px 0 0 rgba(255,255,255,0.6) inset,
+    0 12px 36px rgba(0,0,0,0.1);
+}
+
+/* ══════════════════════════════════
+   ABOUT
+══════════════════════════════════ */
+.section-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 90px 48px;
+}
+
+.divider { height:1px; background:var(--border); max-width:1200px; margin:0 auto; }
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 72px;
+  align-items: center;
+}
+
+.section-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-eyebrow::before { content:''; width:18px; height:1px; background:var(--muted); }
+
+.about-title {
+  font-size: clamp(28px, 3vw, 42px);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.022em;
+  margin-bottom: 20px;
+}
+
+.about-text {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.9;
+  font-weight: 300;
+  margin-bottom: 32px;
+}
+.about-text strong { color: var(--text); font-weight: 500; }
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.stat-item { background: var(--white); padding: 20px; text-align: center; }
+.stat-num { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; line-height:1; margin-bottom:4px; }
+.stat-label { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing:0.08em; text-transform:uppercase; }
+
+/* Photo box — glass */
+.photo-glass {
+  aspect-ratio: 4/5;
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+
+  /* Glass border and shadow on top of video */
+  border: 1px solid rgba(255,255,255,0.7);
+  box-shadow:
+    0 1.5px 0 rgba(255,255,255,0.9) inset,
+    0 -1px 0 rgba(255,255,255,0.15) inset,
+    1px 0 0 rgba(255,255,255,0.45) inset,
+    -1px 0 0 rgba(255,255,255,0.45) inset,
+    0 24px 64px rgba(0,0,0,0.12),
+    0 8px 24px rgba(0,0,0,0.08);
+}
+
+/* Specular top edge — glass catching light above the video */
+.photo-glass::after {
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;height:35%;
+  background:linear-gradient(180deg,rgba(255,255,255,0.22) 0%,rgba(255,255,255,0.04) 60%,transparent 100%);
+  border-radius:20px 20px 0 0;
+  pointer-events:none;
+  z-index:2;
+}
+
+/* ══════════════════════════════════
+   WIDGETS — Liquid Glass cards
+══════════════════════════════════ */
+.explore-title { font-size:clamp(28px,3vw,42px); font-weight:600; letter-spacing:-0.022em; margin-bottom:10px; }
+.explore-sub { font-size:15px; color:var(--muted); font-weight:300; margin-bottom:40px; }
+
+.widgets-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.widget-wide { grid-column: span 2; }
+
+.widget {
+  border-radius: 20px;
+  padding: 28px;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  position: relative;
+  overflow: hidden;
+
+  /* Liquid Glass */
+  background: rgba(255,255,255,0.28);
+  backdrop-filter: blur(28px) saturate(170%) brightness(1.03);
+  -webkit-backdrop-filter: blur(28px) saturate(170%) brightness(1.03);
+  border: 1px solid rgba(255,255,255,0.65);
+  box-shadow:
+    0 1.5px 0 rgba(255,255,255,0.9) inset,
+    0 -1px 0 rgba(255,255,255,0.12) inset,
+    1px 0 0 rgba(255,255,255,0.4) inset,
+    -1px 0 0 rgba(255,255,255,0.4) inset,
+    0 4px 24px rgba(0,0,0,0.06),
+    0 1px 4px rgba(0,0,0,0.04);
+
+  transition: all 0.45s cubic-bezier(0.34,1.4,0.64,1);
+}
+
+/* Specular top on widget */
+.widget::before {
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;height:45%;
+  background:linear-gradient(180deg,rgba(255,255,255,0.28) 0%,rgba(255,255,255,0.05) 60%,transparent 100%);
+  border-radius:20px;
+  pointer-events:none;
+  z-index:1;
+}
+
+/* Light sweep on hover */
+.widget::after {
+  content:'';
+  position:absolute;
+  top:-50%;left:-80%;
+  width:45%;height:200%;
+  background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.55) 48%,rgba(255,255,255,0.2) 52%,transparent 65%);
+  transform:skewX(-10deg);
+  pointer-events:none;
+  z-index:2;
+  transition:left 0.65s cubic-bezier(0.22,1,0.36,1);
+  opacity:0;
+}
+.widget:hover::after { left:130%; opacity:1; }
+
+.widget > *:not(.aurora-wrap) { position:relative; z-index:3; }
+.widget .aurora-wrap { z-index:0; }
+
+.widget:hover {
+  transform: translateY(-8px) scale(1.015);
+  background: rgba(255,255,255,0.42);
+  border-color: rgba(255,255,255,0.85);
+  box-shadow:
+    0 1.5px 0 rgba(255,255,255,0.98) inset,
+    0 -1px 0 rgba(255,255,255,0.18) inset,
+    1px 0 0 rgba(255,255,255,0.55) inset,
+    -1px 0 0 rgba(255,255,255,0.55) inset,
+    0 24px 64px rgba(0,0,0,0.1),
+    0 8px 20px rgba(0,0,0,0.07);
+}
+
+.widget-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; }
+.widget-icon { width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px; background:rgba(255,255,255,0.5); box-shadow:0 1px 0 rgba(255,255,255,0.8) inset,0 2px 6px rgba(0,0,0,0.06); }
+.widget-arrow { font-size:19px;color:var(--muted);transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1),color 0.2s; }
+.widget:hover .widget-arrow { transform:translate(4px,-4px); color:var(--text); }
+
+.widget-title { font-size:17px;font-weight:600;letter-spacing:-0.01em;margin-bottom:9px;line-height:1.3; }
+.widget-desc { font-size:13.5px;color:var(--muted);line-height:1.75;font-weight:300; }
+
+.widget-badge {
+  display:inline-flex;align-items:center;gap:5px;
+  margin-top:20px;
+  font-family:var(--font-mono);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;
+  padding:5px 12px;border-radius:999px;
+  background:rgba(255,255,255,0.5);
+  color:var(--muted);
+  border:1px solid rgba(255,255,255,0.7);
+  box-shadow:0 1px 0 rgba(255,255,255,0.9) inset;
+}
+.badge-live { color:#16A34A; }
+.badge-live::before { content:''; width:5px;height:5px;border-radius:50%;background:#16A34A;animation:pulse 1.5s ease-in-out infinite; }
+
+/* ══════════════════════════════════
+   QUOTE — Animated dark section
+══════════════════════════════════ */
+.quote-section {
+  background: #080A0F;
+  padding: 88px 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.quote-section > *:not(.aurora-wrap):not(.stars) { position:relative;z-index:3; }
+
+/* Animated gradient orbs — vivid on dark */
+.qa .b1 { width:55%;height:180%;top:-40%;left:-8%;   background:radial-gradient(circle,rgba(80,140,255,0.28) 0%,rgba(60,100,220,0.1) 45%,transparent 70%);animation:b1 14s ease-in-out infinite alternate; }
+.qa .b2 { width:55%;height:180%;top:-40%;right:-8%;left:auto;background:radial-gradient(circle,rgba(200,100,180,0.24) 0%,rgba(170,70,150,0.08) 45%,transparent 70%);animation:b3 12s ease-in-out infinite alternate; }
+.qa .b3 { width:45%;height:120%;top:-10%;left:28%;background:radial-gradient(circle,rgba(100,180,200,0.2) 0%,rgba(70,150,180,0.07) 45%,transparent 70%);animation:b2 16s ease-in-out infinite alternate; }
+.qa .b4 { width:40%;height:100%;bottom:-20%;left:10%;top:auto;background:radial-gradient(circle,rgba(160,120,240,0.2) 0%,transparent 70%);animation:b4 18s ease-in-out infinite alternate; }
+.qa .b5 { width:40%;height:100%;bottom:-20%;right:10%;top:auto;left:auto;background:radial-gradient(circle,rgba(240,180,100,0.15) 0%,transparent 70%);animation:b5 11s ease-in-out infinite alternate; }
+
+/* Animated stars/particles */
+.stars {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.star {
+  position: absolute;
+  width: 2px; height: 2px;
+  background: white;
+  border-radius: 50%;
+  animation: twinkle var(--dur) ease-in-out infinite;
+  opacity: 0;
+}
+@keyframes twinkle {
+  0%,100% { opacity:0; transform:scale(0.5); }
+  50% { opacity:var(--op); transform:scale(1); }
+}
+
+/* Subtle scan line */
+.quote-section::after {
+  content:'';
+  position:absolute;
+  top:-100%;left:0;right:0;
+  height:2px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.04),transparent);
+  animation:scanLine 8s linear infinite;
+  z-index:2;
+  pointer-events:none;
+}
+@keyframes scanLine {
+  0% { top:-5%; }
+  100% { top:105%; }
+}
+
+.quote-text {
+  font-family:var(--font-serif);
+  font-size:clamp(22px,3.2vw,40px);
+  font-weight:400;font-style:italic;
+  line-height:1.5;max-width:680px;
+  margin:0 auto 24px;
+  color:rgba(255,255,255,0.9);
+}
+.quote-source { font-family:var(--font-mono);font-size:11px;color:rgba(255,255,255,0.32);letter-spacing:0.18em;text-transform:uppercase; }
+
+/* ══════════════════════════════════
+   FOOTER
+══════════════════════════════════ */
+footer { border-top:1px solid var(--border);padding:40px 48px;max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center; }
+.footer-logo { font-size:15px;font-weight:600;color:var(--text);letter-spacing:-0.02em; }
+.footer-links { display:flex;gap:24px;list-style:none; }
+.footer-links a { font-size:13px;color:var(--muted);text-decoration:none;transition:color 0.2s; }
+.footer-links a:hover { color:var(--text); }
+.footer-copy { font-family:var(--font-mono);font-size:11px;color:var(--muted); }
+
+/* ══════════════════════════════════
+   ANIMATIONS
+══════════════════════════════════ */
+@keyframes fadeUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+
+.reveal {
+  opacity:0;
+  transform:translateY(48px) scale(0.97);
+  transition: opacity 0.75s ease, transform 0.75s cubic-bezier(0.34,1.35,0.64,1);
+}
+.reveal.visible { opacity:1;transform:none; }
+
+.stagger > * {
+  opacity:0;
+  transform:translateY(40px) scale(0.97);
+  transition: opacity 0.65s ease, transform 0.65s cubic-bezier(0.34,1.4,0.64,1);
+}
+.stagger.visible > *:nth-child(1){opacity:1;transform:none;transition-delay:0s}
+.stagger.visible > *:nth-child(2){opacity:1;transform:none;transition-delay:0.08s}
+.stagger.visible > *:nth-child(3){opacity:1;transform:none;transition-delay:0.16s}
+.stagger.visible > *:nth-child(4){opacity:1;transform:none;transition-delay:0.24s}
+.stagger.visible > *:nth-child(5){opacity:1;transform:none;transition-delay:0.32s}
+
+/* ══════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════ */
+@media(max-width:900px){
+  .nav-wrap{padding:0 16px;}
+  .hero{padding:130px 24px 80px;min-height:auto;}
+  .section-wrap{padding:60px 24px;}
+  .about-grid{grid-template-columns:1fr;gap:40px;}
+  .photo-glass{aspect-ratio:4/3;}
+  .widgets-grid{grid-template-columns:1fr;}
+  .widget-wide{grid-column:span 1;}
+  .quote-section{padding:60px 24px;}
+  footer{flex-direction:column;gap:20px;text-align:center;padding:32px 24px;}
+  .footer-links{flex-wrap:wrap;justify-content:center;}
+  nav .nav-links{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="nav-wrap">
+  <nav>
+    <a href="#" class="nav-logo">Utkarsh Mathur</a>
+    <ul class="nav-links">
+      <li><a href="ocean.html">About</a></li>
+      <li><a href="predictions.html">AI Predictions</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="agi.html">AGI</a></li>
+      <li><a href="https://www.linkedin.com/in/utkarsh-mathur-75919940/" target="_blank" class="nav-cta">Connect</a></li>
+    </ul>
+  </nav>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="aurora-wrap ha">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+    <div class="blob b4"></div>
+    <div class="blob b5"></div>
+  </div>
+
+  <div class="hero-tag">
+    <span class="dot"></span>
+    Naval Officer · Mumbai, India · 10+ Years at Sea
+  </div>
+
+  <h1 class="hero-title">
+    Playing with AI<br>
+    from the <span class="serif">middle of<br>the ocean.</span>
+  </h1>
+
+  <p class="hero-sub">
+    Over a decade at sea. Now fascinated by the most consequential technology humanity has ever built. This is where I share what I'm learning, thinking, and building.
+  </p>
+
+  <div class="hero-actions">
+    <a href="#explore" class="btn-primary">Explore ↓</a>
+    <a href="predictions.html" class="btn-secondary">AI Predictions 2025–2035 →</a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ABOUT -->
+<section class="section-wrap" id="about">
+  <div class="about-grid">
+    <div class="reveal">
+      <div class="section-eyebrow">The person</div>
+      <h2 class="about-title">A Naval Officer who developed a deep interest in Artificial Intelligence.</h2>
+      <p class="about-text">
+        I've spent <strong>over a decade navigating the world's oceans</strong> — from the Arabian Sea to the Pacific. Long contracts. Quiet nights on watch. A lot of time to think.
+        <br><br>
+        When Starlink arrived on ships, so did real internet. And with real internet came a rabbit hole I never came back from — <strong>Artificial Intelligence.</strong>
+        <br><br>
+        This is a space where I write about fascinating things, share what I'm building, and try to make sense of the most consequential technology humanity has ever created.
+      </p>
+      <div class="stats-row">
+        <div class="stat-item"><div class="stat-num">10+</div><div class="stat-label">Years at Sea</div></div>
+        <div class="stat-item"><div class="stat-num">2nd</div><div class="stat-label">Chief Officer</div></div>
+        <div class="stat-item"><div class="stat-num">∞</div><div class="stat-label">Curiosity</div></div>
+      </div>
+    </div>
+
+    <div class="photo-glass reveal">
+      <video
+        autoplay
+        muted
+        loop
+        playsinline
+        style="
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+          border-radius: 20px;
+          z-index: 0;
+          filter: saturate(1.1) brightness(0.95);
+        "
+      >
+        <!-- Multiple sources for best browser compatibility -->
+        <source src="https://videos.pexels.com/video-files/4631568/4631568-hd_1920_1080_25fps.mp4" type="video/mp4">
+        <source src="https://videos.pexels.com/video-files/856204/856204-hd_1920_1080_25fps.mp4" type="video/mp4">
+        <source src="https://videos.pexels.com/video-files/7666608/7666608-hd_1920_1080_24fps.mp4" type="video/mp4">
+      </video>
+      <!-- Glass overlay on top of video -->
+      <div style="
+        position: absolute;
+        inset: 0;
+        background: rgba(255,255,255,0.08);
+        backdrop-filter: blur(1px);
+        border-radius: 20px;
+        z-index: 1;
+        pointer-events: none;
+      "></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- WIDGETS -->
+<section class="section-wrap" id="explore">
+  <div class="reveal">
+    <h2 class="explore-title">What's here</h2>
+    <p class="explore-sub">Things I find fascinating — and occasionally build.</p>
+  </div>
+
+  <div class="widgets-grid stagger">
+
+    <a href="predictions.html" class="widget widget-wide">
+      <div class="aurora-wrap" style="inset:-100%;width:300%;height:300%;filter:blur(45px);opacity:0.85;">
+        <div class="blob" style="width:50%;height:70%;top:-10%;left:-5%;border-radius:50%;mix-blend-mode:multiply;background:radial-gradient(circle,rgba(100,170,240,0.5) 0%,transparent 70%);animation:b1 10s ease-in-out infinite alternate;"></div>
+        <div class="blob" style="width:45%;height:60%;bottom:-10%;right:-5%;border-radius:50%;mix-blend-mode:multiply;background:radial-gradient(circle,rgba(210,150,200,0.45) 0%,transparent 70%);animation:b3 12s ease-in-out infinite alternate;"></div>
+      </div>
+      <div class="widget-top">
+        <div class="widget-icon">📡</div>
+        <span class="widget-arrow">↗</span>
+      </div>
+      <div class="widget-title">AI Predictions 2025–2035</div>
+      <div class="widget-desc">10 high-probability predictions for how AI will reshape daily life, work, and civilisation. Ranked by likelihood. Fully interactive.</div>
+      <span class="widget-badge">Predictions · Interactive</span>
+    </a>
+
+    <a href="agi.html" class="widget">
+      <div class="aurora-wrap" style="inset:-100%;width:300%;height:300%;filter:blur(40px);opacity:0.78;">
+        <div class="blob" style="width:70%;height:70%;top:-15%;left:-15%;border-radius:50%;mix-blend-mode:multiply;background:radial-gradient(circle,rgba(170,140,220,0.55) 0%,transparent 70%);animation:b2 11s ease-in-out infinite alternate;"></div>
+        <div class="blob" style="width:55%;height:55%;bottom:-10%;right:-10%;border-radius:50%;mix-blend-mode:multiply;background:radial-gradient(circle,rgba(240,195,150,0.45) 0%,transparent 70%);animation:b4 13s ease-in-out infinite alternate;"></div>
+      </div>
+      <div class="widget-top">
+        <div class="widget-icon">🧠</div>
+        <span class="widget-arrow">↗</span>
+      </div>
+      <div class="widget-title">AGI Enthusiast</div>
+      <div class="widget-desc">Why I think about Artificial General Intelligence constantly — and why you probably should too.</div>
+      <span class="widget-badge">Deep Dive</span>
+    </a>
+
+    <a href="projects.html" class="widget">
+      <div class="aurora-wrap" style="inset:-100%;width:300%;height:300%;filter:blur(40px);opacity:0.78;">
+        <div class="blob" style="width:70%;height:70%;top:-10%;left:-10%;border-radius:50%;mix-blend-mode:multiply;background:radial-gradient(circle,rgba(110,200,190,0.5) 0%,transparent 70%);animation:b1 9s ease-in-out infinite alternate;"></div>
+        <div class="blob" style="width:55%;height:55%;bottom:-10%;right:-5%;border-radius:50%;mix-blend-mode:multiply;background:radial-gradient(circle,rgba(120,175,240,0.45) 0%,transparent 70%);animation:b3 14s ease-in-out infinite alternate;"></div>
+      </div>
+      <div class="widget-top">
+        <div class="widget-icon">🤖</div>
+        <span class="widget-arrow">↗</span>
+      </div>
+      <div class="widget-title">AI Agent Builder</div>
+      <div class="widget-desc">Built a personal AI agent that decides dinner and OTT picks for my family every evening. No code. One day.</div>
+      <span class="widget-badge badge-live">Live & Running</span>
+    </a>
+
+    <a href="ocean.html" class="widget">
+      <div class="aurora-wrap" style="inset:-100%;width:300%;height:300%;filter:blur(40px);opacity:0.78;">
+        <div class="blob" style="width:70%;height:70%;top:-10%;left:-10%;border-radius:50%;mix-blend-mode:multiply;background:radial-gradient(circle,rgba(90,140,200,0.55) 0%,transparent 70%);animation:b4 12s ease-in-out infinite alternate;"></div>
+        <div class="blob" style="width:50%;height:50%;bottom:-5%;right:-5%;border-radius:50%;mix-blend-mode:multiply;background:radial-gradient(circle,rgba(140,200,210,0.45) 0%,transparent 70%);animation:b2 10s ease-in-out infinite alternate;"></div>
+      </div>
+      <div class="widget-top">
+        <div class="widget-icon">🌊</div>
+        <span class="widget-arrow">↗</span>
+      </div>
+      <div class="widget-title">AI from the Ocean</div>
+      <div class="widget-desc">What it's like to explore AI while spending 6 months at a time in the middle of the sea. Starlink changed everything.</div>
+      <span class="widget-badge">Perspective</span>
+    </a>
+
+    <div class="widget widget-wide" style="cursor:default;opacity:0.55;">
+      <div class="widget-top">
+        <div class="widget-icon" style="opacity:0.4;">✦</div>
+      </div>
+      <div class="widget-title" style="color:var(--muted);">More coming soon</div>
+      <div class="widget-desc">Writing, projects, and ideas from somewhere between ports.</div>
+      <span class="widget-badge">Coming Soon</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- QUOTE -->
+<div class="quote-section">
+  <div class="aurora-wrap qa" style="filter:blur(80px);">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+    <div class="blob b4"></div>
+    <div class="blob b5"></div>
+  </div>
+  <!-- Twinkling stars -->
+  <div class="stars" id="stars"></div>
+  <p class="quote-text">"The ocean doesn't care how much you know. It only responds to how well you pay attention."</p>
+  <div class="quote-source">A lesson from the sea — applied to life</div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Utkarsh Mathur</div>
+  <ul class="footer-links">
+    <li><a href="predictions.html">Predictions</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li><a href="agi.html">AGI</a></li>
+    <li><a href="https://www.linkedin.com/in/utkarsh-mathur-75919940/" target="_blank">LinkedIn</a></li>
+  </ul>
+  <div class="footer-copy">Naval Officer · AGI Enthusiast</div>
+</footer>
+
+<script>
+/* BOUNCY SCROLL REVEAL */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal, .stagger').forEach(el => observer.observe(el));
+
+/* SMOOTH SCROLL */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+/* TWINKLING STARS */
+const starsContainer = document.getElementById('stars');
+for (let i = 0; i < 80; i++) {
+  const star = document.createElement('div');
+  star.className = 'star';
+  star.style.cssText = `
+    left: ${Math.random() * 100}%;
+    top: ${Math.random() * 100}%;
+    --dur: ${2 + Math.random() * 4}s;
+    --op: ${0.2 + Math.random() * 0.6};
+    animation-delay: ${Math.random() * 4}s;
+    width: ${Math.random() > 0.8 ? '3px' : '2px'};
+    height: ${Math.random() > 0.8 ? '3px' : '2px'};
+  `;
+  starsContainer.appendChild(star);
+}
+</script>
+</body>
+</html>

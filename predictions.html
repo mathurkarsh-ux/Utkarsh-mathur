@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Predictions 2025–2035 — Utkarsh Mathur</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #F5F5F0;
+  --white: #FFFFFF;
+  --text: #0A0A0A;
+  --muted: #6B6B6B;
+  --border: #E0E0D8;
+  --font-display: 'Bricolage Grotesque', sans-serif;
+  --font-serif: 'Lora', Georgia, serif;
+  --font-mono: 'DM Mono', monospace;
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-display);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  padding: 80px 24px 0;
+}
+
+/* ── AURORA ── */
+.aurora-wrap { position:absolute;inset:-80%;width:260%;height:260%;pointer-events:none;z-index:0;filter:blur(55px); }
+.blob { position:absolute;border-radius:50%;mix-blend-mode:multiply; }
+
+/* ── NAV ── */
+.nav-wrap { position:fixed;top:14px;left:0;right:0;z-index:200;display:flex;justify-content:center;padding:0 24px;pointer-events:none; }
+nav {
+  pointer-events:all;width:100%;max-width:880px;height:54px;padding:0 10px 0 24px;
+  display:flex;justify-content:space-between;align-items:center;border-radius:999px;
+  background:rgba(255,255,255,0.2);backdrop-filter:blur(40px) saturate(200%) brightness(1.06);
+  -webkit-backdrop-filter:blur(40px) saturate(200%) brightness(1.06);
+  border:1px solid rgba(255,255,255,0.65);
+  box-shadow:0 1.5px 0 rgba(255,255,255,0.9) inset,0 8px 32px rgba(0,0,0,0.1);
+  position:relative;overflow:hidden;
+}
+nav::before { content:'';position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(180deg,rgba(255,255,255,0.32) 0%,transparent 100%);border-radius:999px;pointer-events:none;z-index:1; }
+nav::after { content:'';position:absolute;top:-50%;left:-60%;width:40%;height:200%;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.5) 48%,transparent 70%);transform:skewX(-10deg);z-index:2;pointer-events:none;transition:left 0.7s cubic-bezier(0.22,1,0.36,1);opacity:0; }
+nav:hover::after { left:120%;opacity:1; }
+.nav-logo { font-size:15px;font-weight:600;color:var(--text);text-decoration:none;letter-spacing:-0.02em;position:relative;z-index:3; }
+.nav-links { display:flex;gap:4px;list-style:none;align-items:center;position:relative;z-index:3; }
+.nav-links a { font-size:13px;color:rgba(10,10,10,0.7);text-decoration:none;padding:6px 14px;border-radius:999px;transition:all 0.2s; }
+.nav-links a:hover { color:var(--text);background:rgba(255,255,255,0.4); }
+.nav-cta { background:rgba(255,255,255,0.25) !important;border:1px solid rgba(255,255,255,0.5) !important;box-shadow:0 1px 0 rgba(255,255,255,0.8) inset !important; }
+
+/* ── HERO ── */
+.hero {
+  max-width:1200px;margin:0 auto;padding:100px 48px 72px;position:relative;overflow:hidden;
+  border-radius:24px;
+  background:rgba(255,255,255,0.22);backdrop-filter:blur(28px) saturate(160%) brightness(1.03);
+  -webkit-backdrop-filter:blur(28px) saturate(160%) brightness(1.03);
+  border:1px solid rgba(255,255,255,0.65);
+  box-shadow:0 1.5px 0 rgba(255,255,255,0.9) inset,0 8px 40px rgba(0,0,0,0.06);
+}
+.hero > *:not(.aurora-wrap) { position:relative;z-index:2; }
+.hero::before { content:'';position:absolute;top:0;left:0;right:0;height:40%;background:linear-gradient(180deg,rgba(255,255,255,0.28) 0%,transparent 100%);border-radius:24px;pointer-events:none;z-index:1; }
+
+.hero-badge {
+  display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:11px;
+  color:#B45309;background:rgba(180,83,9,0.07);border:1px solid rgba(180,83,9,0.18);
+  padding:6px 14px;border-radius:999px;margin-bottom:28px;
+}
+
+.hero-title { font-size:clamp(40px,6vw,82px);font-weight:700;line-height:1.0;letter-spacing:-0.033em;margin-bottom:20px; }
+.hero-title .serif { font-family:var(--font-serif);font-style:italic;font-weight:400;color:#B45309; }
+
+.hero-sub { font-size:16px;color:var(--muted);line-height:1.8;max-width:640px;font-weight:300;margin-bottom:36px; }
+
+.hero-meta { display:flex;gap:10px;flex-wrap:wrap; }
+.meta-pill {
+  font-family:var(--font-mono);font-size:10.5px;color:var(--muted);
+  background:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.7);
+  padding:5px 14px;border-radius:999px;
+  box-shadow:0 1px 0 rgba(255,255,255,0.8) inset;
+}
+
+/* ── METHODOLOGY ── */
+.content { max-width:1200px;margin:0 auto;padding:48px 48px; }
+
+.section-title {
+  font-size:clamp(20px,2.5vw,30px);font-weight:600;letter-spacing:-0.02em;margin-bottom:28px;
+  display:flex;align-items:center;gap:14px;
+}
+.section-title::before { content:'';flex:0 0 24px;height:2px;background:var(--text); }
+
+/* Methodology strip */
+.method-strip {
+  display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:48px;
+}
+.method-card {
+  border-radius:16px;padding:22px;position:relative;overflow:hidden;
+  background:rgba(255,255,255,0.3);backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.65);
+  box-shadow:0 1.5px 0 rgba(255,255,255,0.9) inset,0 4px 16px rgba(0,0,0,0.05);
+}
+.method-card::before { content:'';position:absolute;top:0;left:0;right:0;height:40%;background:linear-gradient(180deg,rgba(255,255,255,0.25) 0%,transparent 100%);border-radius:16px;pointer-events:none; }
+.method-card > * { position:relative;z-index:2; }
+.method-label { font-family:var(--font-mono);font-size:9.5px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:8px; }
+.method-val { font-size:15px;font-weight:600;letter-spacing:-0.01em; }
+
+/* ── PREDICTION CARDS ── */
+.predictions-list { display:flex;flex-direction:column;gap:14px; }
+
+.pred-card {
+  border-radius:20px;padding:0;position:relative;overflow:hidden;
+  background:rgba(255,255,255,0.28);backdrop-filter:blur(24px) saturate(160%);
+  -webkit-backdrop-filter:blur(24px) saturate(160%);
+  border:1px solid rgba(255,255,255,0.65);
+  box-shadow:0 1.5px 0 rgba(255,255,255,0.9) inset,0 4px 24px rgba(0,0,0,0.06);
+  transition:all 0.45s cubic-bezier(0.34,1.4,0.64,1);
+  cursor:pointer;
+}
+.pred-card::before { content:'';position:absolute;top:0;left:0;right:0;height:40%;background:linear-gradient(180deg,rgba(255,255,255,0.22) 0%,transparent 100%);border-radius:20px;pointer-events:none;z-index:1; }
+.pred-card::after { content:'';position:absolute;top:-50%;left:-80%;width:45%;height:200%;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.5) 48%,transparent 65%);transform:skewX(-10deg);pointer-events:none;z-index:2;transition:left 0.65s cubic-bezier(0.22,1,0.36,1);opacity:0; }
+.pred-card:hover::after { left:130%;opacity:1; }
+.pred-card > * { position:relative;z-index:3; }
+.pred-card:hover {
+  transform:translateY(-4px) scale(1.005);
+  box-shadow:0 1.5px 0 rgba(255,255,255,0.95) inset,0 16px 48px rgba(0,0,0,0.09);
+}
+
+/* Prediction header — always visible */
+.pred-header {
+  display:grid;
+  grid-template-columns:56px 1fr auto;
+  gap:20px;
+  align-items:center;
+  padding:24px 28px;
+}
+
+.pred-num {
+  font-family:var(--font-mono);
+  font-size:11px;
+  font-weight:500;
+  color:var(--muted);
+  letter-spacing:0.1em;
+  background:rgba(0,0,0,0.04);
+  border:1px solid rgba(0,0,0,0.06);
+  border-radius:8px;
+  width:44px;height:44px;
+  display:flex;align-items:center;justify-content:center;
+}
+
+.pred-title-wrap {}
+.pred-title { font-size:clamp(15px,2vw,18px);font-weight:600;letter-spacing:-0.01em;margin-bottom:4px;line-height:1.3; }
+.pred-horizon { font-family:var(--font-mono);font-size:10px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase; }
+
+.pred-right { display:flex;flex-direction:column;align-items:flex-end;gap:6px; }
+
+/* Confidence meter */
+.confidence-wrap { display:flex;flex-direction:column;align-items:flex-end;gap:4px; }
+.confidence-label { font-family:var(--font-mono);font-size:9px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase; }
+.confidence-bar { width:80px;height:4px;background:rgba(0,0,0,0.08);border-radius:999px;overflow:hidden; }
+.confidence-fill { height:100%;border-radius:999px;transition:width 1s cubic-bezier(0.22,1,0.36,1); }
+.conf-95 .confidence-fill { width:95%;background:linear-gradient(90deg,#16A34A,#4ADE80); }
+.conf-90 .confidence-fill { width:90%;background:linear-gradient(90deg,#16A34A,#4ADE80); }
+.conf-85 .confidence-fill { width:85%;background:linear-gradient(90deg,#CA8A04,#FCD34D); }
+.conf-80 .confidence-fill { width:80%;background:linear-gradient(90deg,#CA8A04,#FCD34D); }
+.conf-75 .confidence-fill { width:75%;background:linear-gradient(90deg,#B45309,#FCD34D); }
+.conf-70 .confidence-fill { width:70%;background:linear-gradient(90deg,#DC2626,#F87171); }
+
+.conf-pct { font-family:var(--font-mono);font-size:13px;font-weight:500;color:var(--text); }
+
+/* Category tag */
+.cat-tag { font-family:var(--font-mono);font-size:9.5px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:4px;background:rgba(0,0,0,0.05);color:var(--muted); }
+
+/* Expand chevron */
+.pred-chevron { font-size:16px;color:var(--muted);transition:transform 0.35s cubic-bezier(0.34,1.4,0.64,1); }
+.pred-card.open .pred-chevron { transform:rotate(180deg); }
+
+/* Expandable body */
+.pred-body {
+  max-height:0;
+  overflow:hidden;
+  transition:max-height 0.5s cubic-bezier(0.22,1,0.36,1), padding 0.4s ease;
+  padding:0 28px;
+  border-top:0px solid rgba(255,255,255,0.4);
+}
+.pred-card.open .pred-body {
+  max-height:600px;
+  padding:0 28px 28px;
+  border-top:1px solid rgba(255,255,255,0.5);
+  padding-top:24px;
+}
+
+.pred-body-grid { display:grid;grid-template-columns:1fr 1fr;gap:24px; }
+
+.body-section {}
+.body-label { font-family:var(--font-mono);font-size:9.5px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:10px; }
+.body-text { font-size:14px;color:var(--muted);line-height:1.85;font-weight:300; }
+.body-text strong { color:var(--text);font-weight:500; }
+
+/* Signals list */
+.signals { list-style:none;display:flex;flex-direction:column;gap:6px; }
+.signals li { font-size:13px;color:var(--muted);line-height:1.6;font-weight:300;display:flex;gap:8px;align-items:flex-start; }
+.signals li::before { content:'→';color:#B45309;font-family:var(--font-mono);font-size:11px;flex-shrink:0;margin-top:2px; }
+
+/* Impact tags */
+.impact-tags { display:flex;flex-wrap:wrap;gap:6px;margin-top:12px; }
+.impact-tag { font-family:var(--font-mono);font-size:9.5px;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border-radius:4px;background:rgba(180,83,9,0.07);color:#B45309;border:1px solid rgba(180,83,9,0.15); }
+
+/* ── DARK QUOTE ── */
+.quote-strip {
+  background:#080A0F;border-radius:20px;padding:64px 48px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.quote-strip > *:not(.aurora-wrap):not(.stars) { position:relative;z-index:3; }
+.qs .b1 { width:55%;height:180%;top:-40%;left:-8%;background:radial-gradient(circle,rgba(180,83,9,0.25) 0%,transparent 70%);animation:b1 14s ease-in-out infinite alternate; }
+.qs .b2 { width:55%;height:180%;top:-40%;right:-8%;left:auto;background:radial-gradient(circle,rgba(80,140,255,0.2) 0%,transparent 70%);animation:b3 12s ease-in-out infinite alternate; }
+.qs .b3 { width:40%;height:100%;bottom:-10%;left:25%;top:auto;background:radial-gradient(circle,rgba(120,180,100,0.15) 0%,transparent 70%);animation:b2 16s ease-in-out infinite alternate; }
+.stars { position:absolute;inset:0;z-index:1;pointer-events:none; }
+.star { position:absolute;width:2px;height:2px;background:white;border-radius:50%;animation:twinkle var(--dur) ease-in-out infinite;opacity:0; }
+@keyframes twinkle { 0%,100%{opacity:0;transform:scale(0.5)} 50%{opacity:var(--op);transform:scale(1)} }
+.quote-text { font-family:var(--font-serif);font-size:clamp(18px,2.5vw,32px);font-weight:400;font-style:italic;line-height:1.55;max-width:680px;margin:0 auto 20px;color:rgba(255,255,255,0.9); }
+.quote-source { font-family:var(--font-mono);font-size:11px;color:rgba(255,255,255,0.3);letter-spacing:0.18em;text-transform:uppercase; }
+
+/* Footer */
+footer { border-top:1px solid var(--border);padding:36px 48px;max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center; }
+.footer-logo { font-size:15px;font-weight:600;color:var(--text);letter-spacing:-0.02em; }
+.footer-links { display:flex;gap:24px;list-style:none; }
+.footer-links a { font-size:13px;color:var(--muted);text-decoration:none;transition:color 0.2s; }
+.footer-links a:hover { color:var(--text); }
+
+/* Animations */
+@keyframes b1{0%{transform:translate(0,0) scale(1)}100%{transform:translate(6%,8%) scale(1.12)}}
+@keyframes b2{0%{transform:translate(0,0) scale(1.08)}100%{transform:translate(-8%,6%) scale(0.9)}}
+@keyframes b3{0%{transform:translate(0,0) scale(0.94)}100%{transform:translate(-6%,8%) scale(1.15)}}
+@keyframes b4{0%{transform:translate(0,0) scale(1)}100%{transform:translate(9%,-6%) scale(1.1)}}
+.reveal{opacity:0;transform:translateY(40px) scale(0.98);transition:opacity 0.75s ease,transform 0.75s cubic-bezier(0.34,1.35,0.64,1);}
+.reveal.visible{opacity:1;transform:none;}
+.stagger>*{opacity:0;transform:translateY(32px);transition:opacity 0.6s ease,transform 0.6s cubic-bezier(0.34,1.4,0.64,1);}
+.stagger.visible>*:nth-child(1){opacity:1;transform:none;transition-delay:0s}
+.stagger.visible>*:nth-child(2){opacity:1;transform:none;transition-delay:0.06s}
+.stagger.visible>*:nth-child(3){opacity:1;transform:none;transition-delay:0.12s}
+.stagger.visible>*:nth-child(4){opacity:1;transform:none;transition-delay:0.18s}
+.stagger.visible>*:nth-child(5){opacity:1;transform:none;transition-delay:0.24s}
+.stagger.visible>*:nth-child(6){opacity:1;transform:none;transition-delay:0.30s}
+.stagger.visible>*:nth-child(7){opacity:1;transform:none;transition-delay:0.36s}
+.stagger.visible>*:nth-child(8){opacity:1;transform:none;transition-delay:0.42s}
+.stagger.visible>*:nth-child(9){opacity:1;transform:none;transition-delay:0.48s}
+.stagger.visible>*:nth-child(10){opacity:1;transform:none;transition-delay:0.54s}
+
+@media(max-width:900px){
+  body{padding:80px 12px 0;}
+  .hero{padding:80px 24px 56px;}
+  .content{padding:40px 24px;}
+  .method-strip{grid-template-columns:repeat(2,1fr);}
+  .pred-body-grid{grid-template-columns:1fr;}
+  .pred-header{grid-template-columns:44px 1fr;}
+  .pred-right{display:none;}
+  footer{flex-direction:column;gap:16px;text-align:center;padding:28px 24px;}
+  nav .nav-links{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="nav-wrap">
+  <nav>
+    <a href="index_glass.html" class="nav-logo">← Utkarsh Mathur</a>
+    <ul class="nav-links">
+      <li><a href="index_glass.html#about">About</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="agi.html">AGI</a></li>
+      <li><a href="ocean.html">At Sea</a></li>
+      <li><a href="https://www.linkedin.com/in/utkarsh-mathur-75919940/" target="_blank" class="nav-cta">Connect</a></li>
+    </ul>
+  </nav>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="aurora-wrap">
+    <div class="blob" style="width:58%;height:58%;top:-2%;left:-2%;background:radial-gradient(circle,rgba(180,83,9,0.55) 0%,rgba(150,60,5,0.2) 50%,transparent 72%);animation:b1 13s ease-in-out infinite alternate;"></div>
+    <div class="blob" style="width:52%;height:52%;top:-2%;right:-2%;left:auto;background:radial-gradient(circle,rgba(120,180,240,0.52) 0%,rgba(80,140,210,0.2) 50%,transparent 72%);animation:b2 15s ease-in-out infinite alternate;"></div>
+    <div class="blob" style="width:52%;height:52%;bottom:-2%;right:-2%;top:auto;left:auto;background:radial-gradient(circle,rgba(100,180,100,0.48) 0%,rgba(70,150,70,0.18) 50%,transparent 72%);animation:b3 11s ease-in-out infinite alternate;"></div>
+    <div class="blob" style="width:50%;height:50%;bottom:-2%;left:-2%;top:auto;background:radial-gradient(circle,rgba(170,150,220,0.48) 0%,rgba(140,120,200,0.18) 50%,transparent 72%);animation:b4 17s ease-in-out infinite alternate;"></div>
+  </div>
+  <div class="hero-badge">📡 Last updated — February 2026 · Personal analysis</div>
+  <h1 class="hero-title">AI Predictions<br><span class="serif">2025 — 2035</span></h1>
+  <p class="hero-sub">Ten high-confidence predictions for how artificial intelligence will develop over the next decade. Each prediction is grounded in current research trajectories, capability benchmarks, and deployment patterns — not speculation. Ranked by probability. Click any prediction to expand the technical rationale.</p>
+  <div class="hero-meta">
+    <span class="meta-pill">10 Predictions</span>
+    <span class="meta-pill">70–95% Confidence Range</span>
+    <span class="meta-pill">Horizon: 2025–2035</span>
+    <span class="meta-pill">Updated Feb 2026</span>
+  </div>
+</section>
+
+<!-- METHODOLOGY -->
+<div class="content">
+  <h2 class="section-title reveal">Methodology</h2>
+  <div class="method-strip stagger reveal">
+    <div class="method-card">
+      <div class="method-label">Basis</div>
+      <div class="method-val">Published research, capability benchmarks & deployment data</div>
+    </div>
+    <div class="method-card">
+      <div class="method-label">Confidence</div>
+      <div class="method-val">Bayesian probability estimates — not gut feeling</div>
+    </div>
+    <div class="method-card">
+      <div class="method-label">Horizon</div>
+      <div class="method-val">10-year window · Reviewed annually</div>
+    </div>
+    <div class="method-card">
+      <div class="method-label">Perspective</div>
+      <div class="method-val">Independent — no institutional affiliation or financial interest</div>
+    </div>
+  </div>
+
+  <!-- PREDICTIONS -->
+  <h2 class="section-title reveal">The Predictions</h2>
+
+  <div class="predictions-list stagger reveal">
+
+    <!-- 1 -->
+    <div class="pred-card" onclick="togglePred(this)">
+      <div class="pred-header">
+        <div class="pred-num">01</div>
+        <div class="pred-title-wrap">
+          <div class="pred-title">Agentic AI systems will autonomously execute multi-step professional workflows end-to-end</div>
+          <div class="pred-horizon">2025 – 2027 · Labour & Productivity</div>
+        </div>
+        <div class="pred-right">
+          <div class="confidence-wrap conf-95">
+            <div class="confidence-label">Confidence</div>
+            <div class="confidence-bar"><div class="confidence-fill"></div></div>
+            <div class="conf-pct">95%</div>
+          </div>
+          <span class="cat-tag">Near-term</span>
+          <span class="pred-chevron">↓</span>
+        </div>
+      </div>
+      <div class="pred-body">
+        <div class="pred-body-grid">
+          <div class="body-section">
+            <div class="body-label">Technical Rationale</div>
+            <div class="body-text">Current frontier models (Claude 3.5+, GPT-4o) already demonstrate reliable tool use, multi-step reasoning, and context retention across long tasks. The architectural primitives — function calling, memory, browser control — are production-ready. The limiting factor has shifted from capability to <strong>reliability and deployment infrastructure</strong>, both of which are compressing rapidly. Anthropic's Computer Use, OpenAI's Operator, and Google's Project Mariner are early commercial instantiations of this trajectory.</div>
+          </div>
+          <div class="body-section">
+            <div class="body-label">Leading Signals</div>
+            <ul class="signals">
+              <li>Anthropic Claude Computer Use in public beta — browser, code, file manipulation</li>
+              <li>OpenAI Operator completing real e-commerce and travel workflows autonomously</li>
+              <li>Enterprise deployment of AI agents in legal document review, financial analysis</li>
+              <li>SWE-bench scores exceeding 50% — AI solving real GitHub issues autonomously</li>
+            </ul>
+            <div class="impact-tags">
+              <span class="impact-tag">Knowledge Work</span>
+              <span class="impact-tag">Legal</span>
+              <span class="impact-tag">Finance</span>
+              <span class="impact-tag">Software Development</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="pred-card" onclick="togglePred(this)">
+      <div class="pred-header">
+        <div class="pred-num">02</div>
+        <div class="pred-title-wrap">
+          <div class="pred-title">AI will compress drug discovery timelines from decades to under five years</div>
+          <div class="pred-horizon">2026 – 2030 · Life Sciences</div>
+        </div>
+        <div class="pred-right">
+          <div class="confidence-wrap conf-90">
+            <div class="confidence-label">Confidence</div>
+            <div class="confidence-bar"><div class="confidence-fill"></div></div>
+            <div class="conf-pct">90%</div>
+          </div>
+          <span class="cat-tag">Science</span>
+          <span class="pred-chevron">↓</span>
+        </div>
+      </div>
+      <div class="pred-body">
+        <div class="pred-body-grid">
+          <div class="body-section">
+            <div class="body-label">Technical Rationale</div>
+            <div class="body-text">AlphaFold2 and AlphaFold3 effectively solved the protein structure prediction problem that took structural biology 50 years. The same deep learning paradigm is now being applied to <strong>protein-ligand binding prediction, molecular dynamics simulation, and ADMET property prediction</strong>. Companies like Isomorphic Labs, Recursion Pharmaceuticals, and Insilico Medicine are moving candidates through preclinical phases at 10x speed with significantly lower attrition rates. The bottleneck shifts to clinical trial execution — a regulatory, not computational, constraint.</div>
+          </div>
+          <div class="body-section">
+            <div class="body-label">Leading Signals</div>
+            <ul class="signals">
+              <li>AlphaFold3 predicts protein-ligand, protein-DNA, protein-RNA interactions</li>
+              <li>Insilico Medicine's INS018_055 — first AI-designed drug in Phase II clinical trials</li>
+              <li>Recursion processed 2.5PB of biological data to identify novel drug candidates</li>
+              <li>Isomorphic Labs partnerships with Eli Lilly and Novartis worth $3B+</li>
+            </ul>
+            <div class="impact-tags">
+              <span class="impact-tag">Oncology</span>
+              <span class="impact-tag">Rare Diseases</span>
+              <span class="impact-tag">Antibiotic Resistance</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="pred-card" onclick="togglePred(this)">
+      <div class="pred-header">
+        <div class="pred-num">03</div>
+        <div class="pred-title-wrap">
+          <div class="pred-title">Multimodal AI will become the primary human-computer interface, displacing touch and keyboard for most interactions</div>
+          <div class="pred-horizon">2026 – 2029 · HCI</div>
+        </div>
+        <div class="pred-right">
+          <div class="confidence-wrap conf-85">
+            <div class="confidence-label">Confidence</div>
+            <div class="confidence-bar"><div class="confidence-fill"></div></div>
+            <div class="conf-pct">85%</div>
+          </div>
+          <span class="cat-tag">Interface</span>
+          <span class="pred-chevron">↓</span>
+        </div>
+      </div>
+      <div class="pred-body">
+        <div class="pred-body-grid">
+          <div class="body-section">
+            <div class="body-label">Technical Rationale</div>
+            <div class="body-text">GPT-4o's real-time voice, vision, and reasoning capabilities demonstrated in May 2024 represent the convergence of audio, visual, and language modalities into a unified model. Latency has dropped from seconds to sub-200ms — the threshold for natural conversation. Combined with AR/VR form factors (Apple Vision Pro, Meta Ray-Bans), the contextual awareness required for ambient computing is achievable within this decade. <strong>The keyboard survives for precision input; touch survives for direct manipulation — but ambient voice and vision become the dominant interaction paradigm.</strong></div>
+          </div>
+          <div class="body-section">
+            <div class="body-label">Leading Signals</div>
+            <ul class="signals">
+              <li>GPT-4o real-time API — sub-320ms audio response latency</li>
+              <li>Apple Intelligence integrating Siri with frontier models at OS level</li>
+              <li>Meta AI glasses with real-time vision and voice — 30M+ units shipped</li>
+              <li>Google Gemini Live — continuous multimodal conversation on Android</li>
+            </ul>
+            <div class="impact-tags">
+              <span class="impact-tag">Consumer Devices</span>
+              <span class="impact-tag">Enterprise Software</span>
+              <span class="impact-tag">Accessibility</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="pred-card" onclick="togglePred(this)">
+      <div class="pred-header">
+        <div class="pred-num">04</div>
+        <div class="pred-title-wrap">
+          <div class="pred-title">AI will achieve superhuman performance across all standard medical diagnostic benchmarks</div>
+          <div class="pred-horizon">2025 – 2027 · Healthcare</div>
+        </div>
+        <div class="pred-right">
+          <div class="confidence-wrap conf-95">
+            <div class="confidence-label">Confidence</div>
+            <div class="confidence-bar"><div class="confidence-fill"></div></div>
+            <div class="conf-pct">95%</div>
+          </div>
+          <span class="cat-tag">Healthcare</span>
+          <span class="pred-chevron">↓</span>
+        </div>
+      </div>
+      <div class="pred-body">
+        <div class="pred-body-grid">
+          <div class="body-section">
+            <div class="body-label">Technical Rationale</div>
+            <div class="body-text">AI diagnostic performance has already exceeded specialist-level accuracy in radiology (chest X-ray, mammography, retinal imaging), dermatology, and pathology on benchmark datasets. The remaining gap is in <strong>clinical reasoning under uncertainty</strong> — integrating patient history, comorbidities, and ambiguous presentation into a differential diagnosis. Med-PaLM 2, GPT-4 on USMLE Step 3, and Google's AMIE system achieving expert physician performance on diagnostic conversations represent the closing of this gap. The transition barrier is regulatory approval and liability frameworks, not capability.</div>
+          </div>
+          <div class="body-section">
+            <div class="body-label">Leading Signals</div>
+            <ul class="signals">
+              <li>Google's AMIE outperformed primary care physicians on diagnostic accuracy in blinded trials</li>
+              <li>GPT-4 scores 87th percentile on USMLE — well above passing threshold</li>
+              <li>FDA cleared 692 AI-enabled medical devices as of 2023 — accelerating</li>
+              <li>DeepMind's AlphaFold cited in Nobel Prize for Chemistry 2024</li>
+            </ul>
+            <div class="impact-tags">
+              <span class="impact-tag">Radiology</span>
+              <span class="impact-tag">Pathology</span>
+              <span class="impact-tag">Primary Care</span>
+              <span class="impact-tag">Rare Disease</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="pred-card" onclick="togglePred(this)">
+      <div class="pred-header">
+        <div class="pred-num">05</div>
+        <div class="pred-title-wrap">
+          <div class="pred-title">Frontier AI labs will demonstrate systems capable of conducting original scientific research autonomously</div>
+          <div class="pred-horizon">2027 – 2030 · Research</div>
+        </div>
+        <div class="pred-right">
+          <div class="confidence-wrap conf-80">
+            <div class="confidence-label">Confidence</div>
+            <div class="confidence-bar"><div class="confidence-fill"></div></div>
+            <div class="conf-pct">80%</div>
+          </div>
+          <span class="cat-tag">Science</span>
+          <span class="pred-chevron">↓</span>
+        </div>
+      </div>
+      <div class="pred-body">
+        <div class="pred-body-grid">
+          <div class="body-section">
+            <div class="body-label">Technical Rationale</div>
+            <div class="body-text">AI2's Semantic Scholar, DeepMind's GNoME (discovered 2.2M new crystal structures), and Google's FunSearch (discovered new mathematical theorems) demonstrate that AI can already operate at the frontier of narrow scientific domains. <strong>The next step is closing the loop</strong> — hypothesis generation, experimental design, result interpretation, and iterative refinement without human intervention at each stage. The key bottleneck is long-horizon reasoning and the ability to recognise meaningful novelty versus noise. Scaling laws suggest this is a solvable capability gap within current architectural paradigms.</div>
+          </div>
+          <div class="body-section">
+            <div class="body-label">Leading Signals</div>
+            <ul class="signals">
+              <li>DeepMind GNoME — 2.2M crystal structures, 736 synthesised and validated</li>
+              <li>Google FunSearch — discovered new solutions to cap set and bin packing problems</li>
+              <li>AlphaGeometry solved 25/30 IMO geometry problems at gold medallist level</li>
+              <li>Sakana AI's "AI Scientist" — autonomous paper ideation, execution, writing</li>
+            </ul>
+            <div class="impact-tags">
+              <span class="impact-tag">Materials Science</span>
+              <span class="impact-tag">Mathematics</span>
+              <span class="impact-tag">Physics</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="pred-card" onclick="togglePred(this)">
+      <div class="pred-header">
+        <div class="pred-num">06</div>
+        <div class="pred-title-wrap">
+          <div class="pred-title">AI-generated synthetic media will require mandatory provenance infrastructure to remain trusted</div>
+          <div class="pred-horizon">2025 – 2027 · Governance</div>
+        </div>
+        <div class="pred-right">
+          <div class="confidence-wrap conf-90">
+            <div class="confidence-label">Confidence</div>
+            <div class="confidence-bar"><div class="confidence-fill"></div></div>
+            <div class="conf-pct">90%</div>
+          </div>
+          <span class="cat-tag">Policy</span>
+          <span class="pred-chevron">↓</span>
+        </div>
+      </div>
+      <div class="pred-body">
+        <div class="pred-body-grid">
+          <div class="body-section">
+            <div class="body-label">Technical Rationale</div>
+            <div class="body-text">Sora, Kling, and Runway Gen-3 have reduced the cost and skill barrier for photorealistic video synthesis to near-zero. The epistemological problem — <strong>how does any viewer verify the provenance of any media?</strong> — cannot be solved through detection alone (adversarial arms race). The solution converges on cryptographic content credentials embedded at capture (C2PA standard, adopted by Adobe, Google, Microsoft, Qualcomm), combined with platform-level disclosure requirements. EU AI Act Article 50 mandates disclosure for synthetic media. US and UK legislation is following. This prediction is less about if and more about the timeline to ubiquitous deployment.</div>
+          </div>
+          <div class="body-section">
+            <div class="body-label">Leading Signals</div>
+            <ul class="signals">
+              <li>C2PA standard adopted by Adobe, Google, Microsoft, Truepic, Qualcomm</li>
+              <li>EU AI Act — mandatory disclosure requirements for AI-generated content</li>
+              <li>Meta, YouTube, TikTok deploying AI content labelling infrastructure</li>
+              <li>Deepfake incidents in 2024 US election cycle accelerating regulatory response</li>
+            </ul>
+            <div class="impact-tags">
+              <span class="impact-tag">Elections</span>
+              <span class="impact-tag">Journalism</span>
+              <span class="impact-tag">Legal Evidence</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="pred-card" onclick="togglePred(this)">
+      <div class="pred-header">
+        <div class="pred-num">07</div>
+        <div class="pred-title-wrap">
+          <div class="pred-title">Personalised AI tutors will demonstrably outperform classroom instruction for most learning objectives</div>
+          <div class="pred-horizon">2026 – 2030 · Education</div>
+        </div>
+        <div class="pred-right">
+          <div class="confidence-wrap conf-85">
+            <div class="confidence-label">Confidence</div>
+            <div class="confidence-bar"><div class="confidence-fill"></div></div>
+            <div class="conf-pct">85%</div>
+          </div>
+          <span class="cat-tag">Education</span>
+          <span class="pred-chevron">↓</span>
+        </div>
+      </div>
+      <div class="pred-body">
+        <div class="pred-body-grid">
+          <div class="body-section">
+            <div class="body-label">Technical Rationale</div>
+            <div class="body-text">Bloom's 2 Sigma problem — established in 1984 — demonstrated that one-on-one tutoring produces learning outcomes 2 standard deviations better than classroom instruction. The constraint was cost: personalised tutoring at scale was economically impossible. <strong>LLMs resolve the cost constraint entirely.</strong> Khanmigo, Synthesis, and emerging AI tutoring platforms already demonstrate adaptive pacing, Socratic questioning, and real-time misconception detection. The remaining challenges are motivation, accountability, and social learning — none of which are fundamental barriers to AI-augmented education systems.</div>
+          </div>
+          <div class="body-section">
+            <div class="body-label">Leading Signals</div>
+            <ul class="signals">
+              <li>Khan Academy's Khanmigo — Socratic AI tutor deployed to millions of students</li>
+              <li>Duolingo Max — AI conversation practice with near-native feedback</li>
+              <li>MIT study: students using AI tutors learned material 2x faster vs. traditional instruction</li>
+              <li>Synthesis AI tutor — measurable gains in mathematical reasoning for K-12</li>
+            </ul>
+            <div class="impact-tags">
+              <span class="impact-tag">K-12</span>
+              <span class="impact-tag">Higher Education</span>
+              <span class="impact-tag">Professional Development</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="pred-card" onclick="togglePred(this)">
+      <div class="pred-header">
+        <div class="pred-num">08</div>
+        <div class="pred-title-wrap">
+          <div class="pred-title">AI will accelerate materials discovery for next-generation energy storage and semiconductor applications</div>
+          <div class="pred-horizon">2026 – 2032 · Energy</div>
+        </div>
+        <div class="pred-right">
+          <div class="confidence-wrap conf-80">
+            <div class="confidence-label">Confidence</div>
+            <div class="confidence-bar"><div class="confidence-fill"></div></div>
+            <div class="conf-pct">80%</div>
+          </div>
+          <span class="cat-tag">Energy</span>
+          <span class="pred-chevron">↓</span>
+        </div>
+      </div>
+      <div class="pred-body">
+        <div class="pred-body-grid">
+          <div class="body-section">
+            <div class="body-label">Technical Rationale</div>
+            <div class="body-text">The materials discovery pipeline — synthesise candidate, characterise properties, iterate — has historically required years per candidate. Graph neural networks trained on materials databases (Materials Project, ICSD) can now <strong>predict formation energy, band gap, and stability of novel compounds before synthesis</strong>. Microsoft's MatterGen generates novel materials with targeted properties. For batteries, the challenge is finding solid-state electrolytes with high ionic conductivity and electrochemical stability — a multi-objective optimisation problem well-suited to ML. Microsoft claims its AI-assisted discovery of a new solid electrolyte reduced the exploration space from 32M candidates to 18 in weeks.</div>
+          </div>
+          <div class="body-section">
+            <div class="body-label">Leading Signals</div>
+            <ul class="signals">
+              <li>Microsoft Azure Quantum Elements — solid electrolyte discovery in weeks, not years</li>
+              <li>DeepMind GNoME predicts thermodynamic stability of 2.2M inorganic crystals</li>
+              <li>TSMC and ASML using ML for EUV lithography process optimisation</li>
+              <li>Google TPU v5 chip design partially optimised by reinforcement learning</li>
+            </ul>
+            <div class="impact-tags">
+              <span class="impact-tag">Battery Technology</span>
+              <span class="impact-tag">Semiconductors</span>
+              <span class="impact-tag">Solar Cells</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9 -->
+    <div class="pred-card" onclick="togglePred(this)">
+      <div class="pred-header">
+        <div class="pred-num">09</div>
+        <div class="pred-title-wrap">
+          <div class="pred-title">The gap between frontier AI capability and open-source capability will narrow to under 12 months</div>
+          <div class="pred-horizon">2025 – 2027 · Industry</div>
+        </div>
+        <div class="pred-right">
+          <div class="confidence-wrap conf-75">
+            <div class="confidence-label">Confidence</div>
+            <div class="confidence-bar"><div class="confidence-fill"></div></div>
+            <div class="conf-pct">75%</div>
+          </div>
+          <span class="cat-tag">Industry</span>
+          <span class="pred-chevron">↓</span>
+        </div>
+      </div>
+      <div class="pred-body">
+        <div class="pred-body-grid">
+          <div class="body-section">
+            <div class="body-label">Technical Rationale</div>
+            <div class="body-text">The release of Llama 2 in July 2023 and Llama 3 in April 2024 demonstrated Meta's willingness to release near-frontier weights publicly. DeepSeek R1 in January 2026 released a model matching OpenAI o1 performance at a fraction of compute cost, with full weights open. <strong>The architectural innovations driving capability — mixture-of-experts, chain-of-thought, reinforcement learning from human feedback — are now public knowledge.</strong> The moat for frontier labs increasingly depends on data quality, RLHF infrastructure, and deployment scale — not architecture secrecy. The capability gap narrows as algorithmic efficiency improvements diffuse through open research.</div>
+          </div>
+          <div class="body-section">
+            <div class="body-label">Leading Signals</div>
+            <ul class="signals">
+              <li>DeepSeek R1 — matches OpenAI o1 on benchmarks, fully open weights, $6M training cost</li>
+              <li>Llama 3.1 405B — competitive with GPT-4 class models, open source</li>
+              <li>Mistral, Qwen, Gemma — competitive open models from multiple labs</li>
+              <li>Hugging Face Open LLM Leaderboard tracking rapid capability convergence</li>
+            </ul>
+            <div class="impact-tags">
+              <span class="impact-tag">Commoditisation</span>
+              <span class="impact-tag">Enterprise Deployment</span>
+              <span class="impact-tag">AI Safety</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10 -->
+    <div class="pred-card" onclick="togglePred(this)">
+      <div class="pred-header">
+        <div class="pred-num">10</div>
+        <div class="pred-title-wrap">
+          <div class="pred-title">AI alignment and interpretability will become foundational engineering requirements, not optional research</div>
+          <div class="pred-horizon">2026 – 2030 · Safety</div>
+        </div>
+        <div class="pred-right">
+          <div class="confidence-wrap conf-70">
+            <div class="confidence-label">Confidence</div>
+            <div class="confidence-bar"><div class="confidence-fill"></div></div>
+            <div class="conf-pct">70%</div>
+          </div>
+          <span class="cat-tag">Safety</span>
+          <span class="pred-chevron">↓</span>
+        </div>
+      </div>
+      <div class="pred-body">
+        <div class="pred-body-grid">
+          <div class="body-section">
+            <div class="body-label">Technical Rationale</div>
+            <div class="body-text">As AI systems are deployed in high-stakes domains — medical diagnosis, legal decisions, financial trading, autonomous vehicles — the question of <strong>why a system produced a specific output becomes legally and operationally critical</strong>. Anthropic's mechanistic interpretability research (identifying circuits, features, and attention patterns), OpenAI's superalignment team (before its restructuring), and DeepMind's safety work represent significant institutional investment. EU AI Act's high-risk AI provisions mandate explainability and human oversight for consequential decisions. The market signal is clear: interpretability tooling will be required for enterprise AI deployment in regulated industries, creating commercial pressure aligned with safety research objectives.</div>
+          </div>
+          <div class="body-section">
+            <div class="body-label">Leading Signals</div>
+            <ul class="signals">
+              <li>Anthropic's interpretability — mapping features in Claude to human-readable concepts</li>
+              <li>EU AI Act classifying medical, legal, and critical infrastructure AI as high-risk</li>
+              <li>NIST AI Risk Management Framework adopted as enterprise standard</li>
+              <li>US Executive Order on AI requiring safety evaluations for frontier models</li>
+            </ul>
+            <div class="impact-tags">
+              <span class="impact-tag">Regulation</span>
+              <span class="impact-tag">Enterprise Risk</span>
+              <span class="impact-tag">AGI Safety</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end predictions list -->
+
+  <!-- DARK QUOTE -->
+  <div class="quote-strip reveal" style="margin-top:48px;">
+    <div class="aurora-wrap qs" style="filter:blur(80px);">
+      <div class="blob b1"></div>
+      <div class="blob b2"></div>
+      <div class="blob b3"></div>
+    </div>
+    <div class="stars" id="stars"></div>
+    <p class="quote-text">"Prediction is not prophecy. It is the disciplined application of pattern recognition to available evidence — updated as new evidence arrives."</p>
+    <div class="quote-source">On forecasting — Utkarsh Mathur · February 2026</div>
+  </div>
+
+</div><!-- end content -->
+
+<footer>
+  <div class="footer-logo">Utkarsh Mathur</div>
+  <ul class="footer-links">
+    <li><a href="index_glass.html">Home</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li><a href="agi.html">AGI</a></li>
+    <li><a href="ocean.html">At Sea</a></li>
+  </ul>
+</footer>
+
+<script>
+/* EXPAND/COLLAPSE */
+function togglePred(card) {
+  const isOpen = card.classList.contains('open');
+  document.querySelectorAll('.pred-card.open').forEach(c => c.classList.remove('open'));
+  if (!isOpen) card.classList.add('open');
+}
+
+/* SCROLL REVEAL */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+  });
+}, { threshold: 0.05 });
+document.querySelectorAll('.reveal, .stagger').forEach(el => observer.observe(el));
+
+/* STARS */
+const sc = document.getElementById('stars');
+for (let i = 0; i < 70; i++) {
+  const s = document.createElement('div'); s.className = 'star';
+  s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;--dur:${2+Math.random()*4}s;--op:${0.2+Math.random()*0.55};animation-delay:${Math.random()*5}s;`;
+  sc.appendChild(s);
+}
+</script>
+</body>
+</html>

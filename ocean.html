@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI from the Ocean — Utkarsh Mathur</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700&family=DM+Mono:wght@300;400&family=Lora:ital,wght@0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #F5F5F0;
+  --white: #FFFFFF;
+  --text: #0A0A0A;
+  --muted: #6B6B6B;
+  --border: #E0E0D8;
+  --sea: #1B4F7A;
+  --font-display: 'Bricolage Grotesque', sans-serif;
+  --font-serif: 'Lora', Georgia, serif;
+  --font-mono: 'DM Mono', monospace;
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-display);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  padding: 80px 24px 0;
+}
+
+/* ── AURORA ── */
+.aurora-wrap { position:absolute;inset:-80%;width:260%;height:260%;pointer-events:none;z-index:0;filter:blur(55px); }
+.blob { position:absolute;border-radius:50%;mix-blend-mode:multiply; }
+
+/* ── NAV ── */
+.nav-wrap { position:fixed;top:14px;left:0;right:0;z-index:200;display:flex;justify-content:center;padding:0 24px;pointer-events:none; }
+nav {
+  pointer-events:all;width:100%;max-width:880px;height:54px;padding:0 10px 0 24px;
+  display:flex;justify-content:space-between;align-items:center;border-radius:999px;
+  background:rgba(255,255,255,0.2);backdrop-filter:blur(40px) saturate(200%) brightness(1.06);
+  -webkit-backdrop-filter:blur(40px) saturate(200%) brightness(1.06);
+  border:1px solid rgba(255,255,255,0.65);
+  box-shadow:0 1.5px 0 rgba(255,255,255,0.9) inset,0 8px 32px rgba(0,0,0,0.1);
+  position:relative;overflow:hidden;
+}
+nav::before { content:'';position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(180deg,rgba(255,255,255,0.32) 0%,transparent 100%);border-radius:999px;pointer-events:none;z-index:1; }
+nav::after { content:'';position:absolute;top:-50%;left:-60%;width:40%;height:200%;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.5) 48%,transparent 70%);transform:skewX(-10deg);z-index:2;pointer-events:none;transition:left 0.7s cubic-bezier(0.22,1,0.36,1);opacity:0; }
+nav:hover::after { left:120%;opacity:1; }
+.nav-logo { font-size:15px;font-weight:600;color:var(--text);text-decoration:none;letter-spacing:-0.02em;position:relative;z-index:3; }
+.nav-links { display:flex;gap:4px;list-style:none;align-items:center;position:relative;z-index:3; }
+.nav-links a { font-size:13px;color:rgba(10,10,10,0.7);text-decoration:none;padding:6px 14px;border-radius:999px;transition:all 0.2s; }
+.nav-links a:hover { color:var(--text);background:rgba(255,255,255,0.4); }
+.nav-cta { background:rgba(255,255,255,0.25) !important;border:1px solid rgba(255,255,255,0.5) !important;box-shadow:0 1px 0 rgba(255,255,255,0.8) inset !important; }
+
+/* ── HERO ── */
+.hero {
+  max-width:1200px;margin:0 auto;padding:100px 48px 80px;position:relative;overflow:hidden;
+  border-radius:24px;
+  background:rgba(255,255,255,0.22);backdrop-filter:blur(28px) saturate(160%) brightness(1.03);
+  -webkit-backdrop-filter:blur(28px) saturate(160%) brightness(1.03);
+  border:1px solid rgba(255,255,255,0.65);
+  box-shadow:0 1.5px 0 rgba(255,255,255,0.9) inset,0 8px 40px rgba(0,0,0,0.06);
+}
+.hero > *:not(.aurora-wrap) { position:relative;z-index:2; }
+.hero::before { content:'';position:absolute;top:0;left:0;right:0;height:40%;background:linear-gradient(180deg,rgba(255,255,255,0.28) 0%,transparent 100%);border-radius:24px;pointer-events:none;z-index:1; }
+
+.hero-badge {
+  display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:11px;
+  color:var(--sea);background:rgba(27,79,122,0.08);border:1px solid rgba(27,79,122,0.2);
+  padding:6px 14px;border-radius:999px;margin-bottom:28px;
+}
+.hero-title { font-size:clamp(42px,6vw,80px);font-weight:700;line-height:1.0;letter-spacing:-0.03em;margin-bottom:24px; }
+.hero-title .serif { font-family:var(--font-serif);font-style:italic;font-weight:400;color:var(--sea); }
+.hero-sub { font-size:18px;color:var(--muted);line-height:1.75;max-width:580px;font-weight:300; }
+
+/* Video strip */
+.video-strip {
+  max-width:1200px;margin:0 auto;padding:0 0 0;
+  position:relative;
+}
+.video-glass {
+  border-radius:20px;overflow:hidden;position:relative;aspect-ratio:21/9;
+  border:1px solid rgba(255,255,255,0.65);
+  box-shadow:0 1.5px 0 rgba(255,255,255,0.9) inset,0 16px 48px rgba(0,0,0,0.1);
+}
+.video-glass video { width:100%;height:100%;object-fit:cover;display:block;filter:saturate(1.15) brightness(0.9); }
+.video-glass::after {
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(255,255,255,0.12) 0%,transparent 30%,transparent 70%,rgba(0,0,0,0.15) 100%);
+  pointer-events:none;
+}
+.video-caption {
+  position:absolute;bottom:20px;left:24px;
+  font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;
+  color:rgba(255,255,255,0.7);z-index:2;
+}
+
+/* ── CONTENT ── */
+.content { max-width:1200px;margin:0 auto;padding:60px 48px; }
+
+.section-title {
+  font-size:clamp(22px,2.8vw,34px);font-weight:600;letter-spacing:-0.02em;margin-bottom:32px;
+  display:flex;align-items:center;gap:16px;
+}
+.section-title::before { content:'';flex:0 0 28px;height:2px;background:var(--text); }
+
+.glass-card {
+  border-radius:20px;padding:36px;margin-bottom:14px;position:relative;overflow:hidden;
+  background:rgba(255,255,255,0.3);backdrop-filter:blur(24px) saturate(160%);
+  -webkit-backdrop-filter:blur(24px) saturate(160%);
+  border:1px solid rgba(255,255,255,0.65);
+  box-shadow:0 1.5px 0 rgba(255,255,255,0.9) inset,0 4px 24px rgba(0,0,0,0.06);
+  transition:all 0.4s cubic-bezier(0.34,1.4,0.64,1);
+}
+.glass-card::before { content:'';position:absolute;top:0;left:0;right:0;height:40%;background:linear-gradient(180deg,rgba(255,255,255,0.25) 0%,transparent 100%);border-radius:20px;pointer-events:none; }
+.glass-card::after { content:'';position:absolute;top:-50%;left:-80%;width:45%;height:200%;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.5) 48%,transparent 65%);transform:skewX(-10deg);pointer-events:none;z-index:2;transition:left 0.65s cubic-bezier(0.22,1,0.36,1);opacity:0; }
+.glass-card:hover::after { left:130%;opacity:1; }
+.glass-card > * { position:relative;z-index:3; }
+.glass-card:hover { transform:translateY(-4px);box-shadow:0 1.5px 0 rgba(255,255,255,0.95) inset,0 16px 48px rgba(0,0,0,0.09); }
+
+.two-col { display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px; }
+
+.card-icon { font-size:32px;margin-bottom:16px;display:block; }
+.card-title { font-size:19px;font-weight:600;letter-spacing:-0.01em;margin-bottom:10px; }
+.card-text { font-size:14px;color:var(--muted);line-height:1.85;font-weight:300; }
+.card-text strong { color:var(--text);font-weight:500; }
+
+/* Long-form prose */
+.prose {
+  font-size:16px;color:var(--muted);line-height:2;font-weight:300;
+  max-width:720px;
+}
+.prose strong { color:var(--text);font-weight:500; }
+.prose p { margin-bottom:20px; }
+
+/* Pull quote */
+.pull-quote {
+  font-family:var(--font-serif);font-size:clamp(20px,2.8vw,32px);
+  font-weight:400;font-style:italic;line-height:1.5;
+  color:var(--text);padding:36px;
+  border-left:3px solid var(--sea);
+  background:rgba(27,79,122,0.04);
+  border-radius:0 16px 16px 0;
+  margin-bottom:14px;
+}
+
+/* Coordinates card */
+.coords-card {
+  display:flex;align-items:center;gap:32px;
+  background:rgba(27,79,122,0.06);border-color:rgba(27,79,122,0.18) !important;
+}
+.coord-item { text-align:center; }
+.coord-val { font-family:var(--font-mono);font-size:22px;font-weight:500;color:var(--sea);line-height:1;margin-bottom:4px; }
+.coord-label { font-family:var(--font-mono);font-size:10px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase; }
+.coord-divider { width:1px;height:48px;background:rgba(27,79,122,0.2); }
+
+/* Quote strip */
+.quote-strip {
+  background:#080A0F;border-radius:20px;padding:64px 48px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.quote-strip > *:not(.aurora-wrap):not(.stars) { position:relative;z-index:3; }
+.qs .b1 { width:55%;height:180%;top:-40%;left:-8%;background:radial-gradient(circle,rgba(27,79,122,0.4) 0%,transparent 70%);animation:b1 14s ease-in-out infinite alternate; }
+.qs .b2 { width:55%;height:180%;top:-40%;right:-8%;left:auto;background:radial-gradient(circle,rgba(80,180,200,0.3) 0%,transparent 70%);animation:b3 12s ease-in-out infinite alternate; }
+.qs .b3 { width:40%;height:100%;bottom:-10%;left:25%;top:auto;background:radial-gradient(circle,rgba(100,160,220,0.2) 0%,transparent 70%);animation:b2 16s ease-in-out infinite alternate; }
+.stars { position:absolute;inset:0;z-index:1;pointer-events:none; }
+.star { position:absolute;width:2px;height:2px;background:white;border-radius:50%;animation:twinkle var(--dur) ease-in-out infinite;opacity:0; }
+@keyframes twinkle { 0%,100%{opacity:0;transform:scale(0.5)} 50%{opacity:var(--op);transform:scale(1)} }
+.quote-text { font-family:var(--font-serif);font-size:clamp(20px,2.8vw,36px);font-weight:400;font-style:italic;line-height:1.5;max-width:680px;margin:0 auto 20px;color:rgba(255,255,255,0.92); }
+.quote-source { font-family:var(--font-mono);font-size:11px;color:rgba(255,255,255,0.3);letter-spacing:0.18em;text-transform:uppercase; }
+
+footer { border-top:1px solid var(--border);padding:36px 48px;max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center; }
+.footer-logo { font-size:15px;font-weight:600;color:var(--text);letter-spacing:-0.02em; }
+.footer-links { display:flex;gap:24px;list-style:none; }
+.footer-links a { font-size:13px;color:var(--muted);text-decoration:none;transition:color 0.2s; }
+.footer-links a:hover { color:var(--text); }
+
+@keyframes b1{0%{transform:translate(0,0) scale(1)}100%{transform:translate(6%,8%) scale(1.12)}}
+@keyframes b2{0%{transform:translate(0,0) scale(1.08)}100%{transform:translate(-8%,6%) scale(0.9)}}
+@keyframes b3{0%{transform:translate(0,0) scale(0.94)}100%{transform:translate(-6%,8%) scale(1.15)}}
+@keyframes b4{0%{transform:translate(0,0) scale(1)}100%{transform:translate(9%,-6%) scale(1.1)}}
+.reveal{opacity:0;transform:translateY(40px) scale(0.98);transition:opacity 0.75s ease,transform 0.75s cubic-bezier(0.34,1.35,0.64,1);}
+.reveal.visible{opacity:1;transform:none;}
+.stagger>*{opacity:0;transform:translateY(32px);transition:opacity 0.6s ease,transform 0.6s cubic-bezier(0.34,1.4,0.64,1);}
+.stagger.visible>*:nth-child(1){opacity:1;transform:none;transition-delay:0s}
+.stagger.visible>*:nth-child(2){opacity:1;transform:none;transition-delay:0.1s}
+
+@media(max-width:900px){
+  body{padding:80px 12px 0;}
+  .hero{padding:80px 24px 60px;}
+  .content{padding:40px 24px;}
+  .two-col{grid-template-columns:1fr;}
+  .coords-card{flex-direction:column;gap:16px;}
+  .coord-divider{width:48px;height:1px;}
+  .video-glass{aspect-ratio:16/9;}
+  footer{flex-direction:column;gap:16px;text-align:center;padding:28px 24px;}
+  nav .nav-links{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="nav-wrap">
+  <nav>
+    <a href="index_glass.html" class="nav-logo">← Utkarsh Mathur</a>
+    <ul class="nav-links">
+      <li><a href="index_glass.html#about">About</a></li>
+      <li><a href="predictions.html">Predictions</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="agi.html">AGI</a></li>
+      <li><a href="https://www.linkedin.com/in/utkarsh-mathur-75919940/" target="_blank" class="nav-cta">Connect</a></li>
+    </ul>
+  </nav>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="aurora-wrap">
+    <div class="blob" style="width:60%;height:60%;top:-2%;left:-2%;background:radial-gradient(circle,rgba(27,79,122,0.65) 0%,rgba(20,60,100,0.25) 50%,transparent 72%);animation:b1 13s ease-in-out infinite alternate;"></div>
+    <div class="blob" style="width:52%;height:52%;top:-2%;right:-2%;left:auto;background:radial-gradient(circle,rgba(80,180,200,0.55) 0%,rgba(50,150,180,0.2) 50%,transparent 72%);animation:b2 15s ease-in-out infinite alternate;"></div>
+    <div class="blob" style="width:52%;height:52%;bottom:-2%;right:-2%;top:auto;left:auto;background:radial-gradient(circle,rgba(120,180,240,0.5) 0%,rgba(80,140,210,0.18) 50%,transparent 72%);animation:b3 11s ease-in-out infinite alternate;"></div>
+    <div class="blob" style="width:50%;height:50%;bottom:-2%;left:-2%;top:auto;background:radial-gradient(circle,rgba(170,210,230,0.48) 0%,rgba(130,180,210,0.16) 50%,transparent 72%);animation:b4 17s ease-in-out infinite alternate;"></div>
+  </div>
+  <div class="hero-badge">🌊 Personal Perspective</div>
+  <h1 class="hero-title">AI from<br>the <span class="serif">ocean.</span></h1>
+  <p class="hero-sub">What it's actually like to discover artificial intelligence while spending months at a time in the middle of the sea — with nothing but water, stars, and eventually, Starlink.</p>
+</section>
+
+<!-- OCEAN VIDEO -->
+<div class="video-strip">
+  <div class="video-glass reveal">
+    <video autoplay muted loop playsinline>
+      <source src="https://videos.pexels.com/video-files/4631568/4631568-hd_1920_1080_25fps.mp4" type="video/mp4">
+      <source src="https://videos.pexels.com/video-files/856204/856204-hd_1920_1080_25fps.mp4" type="video/mp4">
+    </video>
+    <div class="video-caption">Somewhere between ports — Arabian Sea</div>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- THE LIFE -->
+  <h2 class="section-title reveal">The life at sea</h2>
+
+  <div class="glass-card coords-card reveal">
+    <div class="coord-item">
+      <div class="coord-val">6 mo</div>
+      <div class="coord-label">Average contract</div>
+    </div>
+    <div class="coord-divider"></div>
+    <div class="coord-item">
+      <div class="coord-val">10+</div>
+      <div class="coord-label">Years sailing</div>
+    </div>
+    <div class="coord-divider"></div>
+    <div class="coord-item">
+      <div class="coord-val">4hrs</div>
+      <div class="coord-label">Watch shifts</div>
+    </div>
+    <div class="coord-divider"></div>
+    <div class="coord-item">
+      <div class="coord-val">∞</div>
+      <div class="coord-label">Stars overhead</div>
+    </div>
+  </div>
+
+  <div class="glass-card reveal">
+    <div class="prose">
+      <p>Most people imagine life at sea as romantic. Long horizons, sunsets, adventure. That part is real. But the honest version also includes <strong>six-month stretches away from family</strong>, four-hours-on four-hours-off watch schedules, and weeks where the most interesting event is a passing ship on the radar.</p>
+      <p>For the first several years, I read a lot. Thought a lot. The ocean gives you something cities rarely do — <strong>uninterrupted time with your own thoughts</strong>. No traffic. No meetings. No social noise. Just the watch, the sea, and your mind.</p>
+      <p>Then Starlink arrived on our vessel. And everything changed.</p>
+    </div>
+  </div>
+
+  <!-- WHEN STARLINK ARRIVED -->
+  <h2 class="section-title reveal">When Starlink arrived</h2>
+  <div class="pull-quote reveal">
+    "The moment I had real internet in the middle of the Indian Ocean was the moment I fell into AI. I started with ChatGPT out of curiosity. Six months later I was reading research papers on Constitutional AI on night watch."
+  </div>
+
+  <div class="two-col stagger reveal">
+    <div class="glass-card">
+      <span class="card-icon">📡</span>
+      <div class="card-title">Before Starlink</div>
+      <div class="card-text">Slow, expensive VSAT. Email only. No video calls. No streaming. The ship's library and each other's company. <strong>The ocean was genuinely disconnected</strong> from the world.</div>
+    </div>
+    <div class="glass-card">
+      <span class="card-icon">🛰️</span>
+      <div class="card-title">After Starlink</div>
+      <div class="card-text">Broadband in the middle of the ocean. Video calls home. Real-time news. And suddenly — <strong>access to the most fascinating technological revolution in human history</strong>, in real time, from a ship's bridge.</div>
+    </div>
+  </div>
+
+  <!-- WHY THE OCEAN PERSPECTIVE MATTERS -->
+  <h2 class="section-title reveal">Why ocean perspective matters for AI</h2>
+  <div class="two-col stagger reveal">
+    <div class="glass-card">
+      <span class="card-icon">🌊</span>
+      <div class="card-title">Comfort with uncertainty</div>
+      <div class="card-text">At sea you make decisions with incomplete information constantly. Weather forecasts are probabilistic. <strong>AI works the same way.</strong> Sailors are unusually comfortable with probabilistic thinking.</div>
+    </div>
+    <div class="glass-card">
+      <span class="card-icon">🧭</span>
+      <div class="card-title">Long-horizon thinking</div>
+      <div class="card-text">Navigation is inherently about <strong>where you'll be in 12 hours, not right now</strong>. That same long-horizon mindset makes thinking about AI's 10-year trajectory feel natural, not abstract.</div>
+    </div>
+    <div class="glass-card">
+      <span class="card-icon">⚠️</span>
+      <div class="card-title">Risk awareness</div>
+      <div class="card-text">The sea teaches you that <strong>underestimating powerful forces is fatal</strong>. That lesson applies directly to how I think about AI safety and alignment. Not fear — respect.</div>
+    </div>
+    <div class="glass-card">
+      <span class="card-icon">🔭</span>
+      <div class="card-title">Distance gives clarity</div>
+      <div class="card-text">Being physically removed from Silicon Valley hype cycles means I read the <strong>primary sources, not the commentary</strong>. The ocean is a surprisingly good filter for signal vs. noise.</div>
+    </div>
+  </div>
+
+  <!-- QUOTE -->
+  <div class="quote-strip reveal">
+    <div class="aurora-wrap qs" style="filter:blur(80px);">
+      <div class="blob b1"></div>
+      <div class="blob b2"></div>
+      <div class="blob b3"></div>
+    </div>
+    <div class="stars" id="stars"></div>
+    <p class="quote-text">"The ocean doesn't care how much you know. It only responds to how well you pay attention."</p>
+    <div class="quote-source">A lesson from the sea — applied to life</div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-logo">Utkarsh Mathur</div>
+  <ul class="footer-links">
+    <li><a href="index_glass.html">Home</a></li>
+    <li><a href="predictions.html">Predictions</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li><a href="agi.html">AGI</a></li>
+  </ul>
+</footer>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal, .stagger').forEach(el => observer.observe(el));
+
+const sc = document.getElementById('stars');
+for (let i = 0; i < 60; i++) {
+  const s = document.createElement('div'); s.className = 'star';
+  s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;--dur:${2+Math.random()*4}s;--op:${0.2+Math.random()*0.6};animation-delay:${Math.random()*4}s;`;
+  sc.appendChild(s);
+}
+</script>
+</body>
+</html>
